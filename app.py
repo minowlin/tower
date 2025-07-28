@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import plotly.graph_objects as go
+
 from minimal_sim import (
     load_build_catalog_strict,
     load_visitors_strict,
