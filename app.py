@@ -13,7 +13,6 @@ st.sidebar.header("Setup")
 build_csv   = st.sidebar.text_input("Build CSV path", "build library.csv")
 vis_csv     = st.sidebar.text_input("Visitor CSV path", "visitor_table_basic.csv")
 start_yen   = st.sidebar.number_input("Starting Yen", min_value=0, value=300)
-draws       = st.sidebar.number_input("Draws per week", min_value=1, value=1)
 refuse      = st.sidebar.checkbox("Refuse overshoot", value=False)
 
 if "build" not in st.session_state:
@@ -46,7 +45,6 @@ if st.button("Run one week"):
     out = run_week(
         state, build, vis,
         build_choice = choice or None,
-        draws       = draws,
         refuse_overshoot = refuse,
     )
     st.session_state.state = state
