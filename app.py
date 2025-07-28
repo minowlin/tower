@@ -21,18 +21,7 @@ if "build" not in st.session_state:
     st.session_state.state = new_state(start_yen)
 
 st.title("🏢 Tower Builder Sim")
-
-# Show current totals
-st.subheader("Totals")
 s = st.session_state.state
-st.write({
-    "Week": s["week"],
-    "Yen": s["yen"],
-    "Population": s["population"],
-    "Influence": s["influence"],
-    "Interest": s["interest"],
-    "Avg Satisfaction": (sum(s["satisfaction_history"])/len(s["satisfaction_history"])) if s["satisfaction_history"] else 0
-})
 
 # Build choice
 choice = st.text_input("Build (ID or name)", "")
@@ -57,6 +46,18 @@ if st.button("Run one week"):
     st.subheader("Tower Rooms")
     df_rooms = pd.DataFrame(s["rooms"])
     st.dataframe(df_rooms[["floor","room_name","level","slots_remaining","active"]])
+
+# Show current totals
+st.subheader("Totals")
+s = st.session_state.state
+st.write({
+    "Week": s["week"],
+    "Yen": s["yen"],
+    "Population": s["population"],
+    "Influence": s["influence"],
+    "Interest": s["interest"],
+    "Avg Satisfaction": (sum(s["satisfaction_history"])/len(s["satisfaction_history"])) if s["satisfaction_history"] else 0
+})
 
 st.sidebar.markdown("---")
 if st.sidebar.button("Reset"):
