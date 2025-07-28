@@ -1,0 +1,49 @@
+visitor,month,type,desired_room_class,desired_level
+Crane,January,Bright,Culture,1
+Poetry Ribbon,January,Ribbon,Hospitality,1
+Plain Pine 1,January,Chaff,Commerce,1
+Plain Pine 2,January,Chaff,Commerce,1
+Bush Warbler,February,Animal,Entertainment,1
+Poetry Ribbon,February,Ribbon,Hospitality,1
+Plain Plum 1,February,Chaff,Commerce,1
+Plain Plum 2,February,Chaff,Commerce,1
+Curtain,March,Bright,Culture,1
+Poetry Ribbon,March,Ribbon,Hospitality,1
+Plain Cherry 1,March,Chaff,Commerce,1
+Plain Cherry 2,March,Chaff,Commerce,1
+Cuckoo,April,Animal,Entertainment,2
+Poetry Ribbon,April,Ribbon,Hospitality,2
+Plain Wisteria 1,April,Chaff,Commerce,2
+Plain Wisteria 2,April,Chaff,Commerce,2
+Bridge,May,Scenic,Event,2
+Poetry Ribbon,May,Ribbon,Hospitality,2
+Plain Iris 1,May,Chaff,Commerce,2
+Plain Iris 2,May,Chaff,Commerce,2
+Butterfly,June,Animal,Entertainment,2
+Plain Peony 1,June,Chaff,Commerce,2
+Plain Peony 2,June,Chaff,Commerce,2
+Plain Peony 3,June,Chaff,Commerce,2
+Boar,July,Animal,Entertainment,3
+Poetry Ribbon,July,Ribbon,Hospitality,3
+Plain Clover 1,July,Chaff,Commerce,3
+Plain Clover 2,July,Chaff,Commerce,3
+Full Moon,August,Bright,Culture,3
+Geese,August,Animal,Entertainment,3
+Plain Grass 1,August,Chaff,Commerce,3
+Plain Grass 2,August,Chaff,Commerce,3
+Sake Cup,September,Special,Event,3
+Plain Chrysanthemum 1,September,Chaff,Commerce,3
+Plain Chrysanthemum 2,September,Chaff,Commerce,3
+Plain Chrysanthemum 3,September,Chaff,Commerce,3
+Deer,October,Animal,Entertainment,4
+Blue Ribbon,October,Ribbon,Hospitality,4
+Plain Maple 1,October,Chaff,Commerce,4
+Plain Maple 2,October,Chaff,Commerce,4
+Rainman,November,Bright,Culture,4
+Frog,November,Animal,Entertainment,4
+Umbrella,November,Chaff,Commerce,4
+Plain Willow,November,Chaff,Commerce,4
+Phoenix,December,Bright,Culture,4
+Plain Paulownia 1,December,Chaff,Commerce,4
+Plain Paulownia 2,December,Chaff,Commerce,4
+Plain Paulownia 3,December,Chaff,Commerce,4
