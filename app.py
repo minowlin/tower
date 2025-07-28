@@ -6,6 +6,7 @@ from minimal_sim import (
     new_state,
     run_week,
     show_rooms,
+    render_tower_image
 )
 
 # Sidebar: load data & set parameters
@@ -31,22 +32,27 @@ state = st.session_state.state
 
 # Step button
 if st.button("Run one week"):
-    out = run_week(
-        state, build, vis,
-        build_choice = choice or None,
-        refuse_overshoot = refuse,
-    )
-    st.session_state.state = state
-    st.subheader("This Week’s Summary")
-    st.json(out["summary"])
+    try:
+        out = run_week(
+            state, build, vis,
+            build_choice = choice or None,
+            refuse_overshoot = refuse,
+        )
+        st.session_state.state = state
+        st.subheader("This Week’s Summary")
+        st.json(out["summary"])
 
-    st.subheader("Assignments")
-    st.dataframe(pd.DataFrame(out["assignments"]))
+        st.subheader("Assignments")
+        st.dataframe(pd.DataFrame(out["assignments"]))
 
-    st.subheader("Tower Rooms")
-    df_rooms = pd.DataFrame(s["rooms"])
-    st.dataframe(df_rooms[["floor","room_name","level","slots_remaining","active"]])
-
+        st.subheader("Tower")
+        st.image(render_tower_image(st.session_state.state), use_container_width=False)
+    except ValueError as e:
+        st.warning(str(e))
+        # (optional) show what *is* affordable
+        affordable = build[build["cost"] <= state["yen"]][["build_id","room_name","cost"]]
+        st.info("Affordable right now:")
+        st.dataframe(affordable)
 # Show current totals
 st.subheader("Totals")
 s = st.session_state.state
