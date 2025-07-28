@@ -366,7 +366,7 @@ def render_tower_image(state, tile_w=180, tile_h=70, margin=20):
 
     # draw floors bottom-up
     n = len(floors)
-    for idx, f in enumerate(sorted(floors, reverse=True)):
+    for idx, f in enumerate(sorted(floors)):
         y = top_g + (n - 1 - idx) * tile_h
         # floor tick
         draw.line([(shaft_x0, y+tile_h-1), (shaft_x1, y+tile_h-1)], fill=(210,210,210), width=1)
