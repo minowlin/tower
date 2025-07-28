@@ -75,19 +75,33 @@ def make_room_instance(row: pd.Series, floor: int) -> Dict[str,Any]:
         "slots_total": int(row["slots"]),
         "slots_remaining": int(row["slots"]) if not is_repeat else int(row["slots"]),  # for repeat, this is weekly capacity
         "weekly_served": 0,
-        "active": True
+        "active": True,
+        "window_weeks": int(row["window_weeks"]) if "window_weeks" in row else 4,
+        "window_progress": 0,  # 0..window_weeks-1
     }
 
 # ---------- Mechanics ----------
 def start_of_week(state: Dict[str,Any]) -> None:
     state["week"] += 1
-    # reset weekly counters for repeat rooms (capacity is per week)
     for r in state["rooms"]:
         if r["repeat"]:
-            r["weekly_served"] = 0
-            # capacity each week is slots_total
-            # (you can omit slots_remaining for repeat, or mirror slots_total)
-            r["slots_remaining"] = r["slots_total"]
+            # Backfill defaults for old saves:
+            r.setdefault("window_weeks", 1)
+            r.setdefault("window_progress", 0)
+
+            ww = max(1, int(r["window_weeks"]))
+            # Reset ONLY when a window completes
+            if r["window_progress"] >= ww - 1:
+                r["weekly_served"] = 0
+                r["window_progress"] = 0
+            else:
+                r["window_progress"] += 1
+
+            # keep slots_remaining in sync for display
+            r["slots_remaining"] = max(0, int(r["slots_total"]) - int(r["weekly_served"]))
+        else:
+            # "once" rooms unchanged
+            pass
 
 def place_room(state: Dict[str,Any], catalog: pd.DataFrame, sel: str|int) -> Optional[Dict[str,Any]]:
     """Select by build_id (int) or substring of room_name (str). Costs are handled outside."""
