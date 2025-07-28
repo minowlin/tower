@@ -327,3 +327,82 @@ Example:
 """
     # start interactive shell
     code.interact(banner=banner, local=globals())
+
+# --------- Graphic render (Pillow) ----------
+from PIL import Image, ImageDraw
+
+_PALETTE = {
+    "Hospitality": (76, 175, 80),     # green
+    "Commerce":    (66, 133, 244),    # blue
+    "Entertainment": (255, 152, 0),   # orange
+    "Culture":     (156, 39, 176),    # purple
+    "Service":     (158, 158, 158),   # gray
+}
+
+def _lighten(rgb, factor=0.5):
+    r,g,b = rgb
+    return (int(r + (255-r)*factor), int(g + (255-g)*factor), int(b + (255-b)*factor))
+
+def render_tower_image(state, tile_w=180, tile_h=70, margin=20):
+    rooms = list(state.get("rooms", []))
+    floors = sorted({r["floor"] for r in rooms}) or [1]
+    by_floor = {}
+    for r in rooms:
+        by_floor.setdefault(r["floor"], []).append(r)
+    for f in by_floor:
+        by_floor[f].sort(key=lambda x: (x["room_class"], x["room_name"]))
+
+    max_cols = max((len(v) for v in by_floor.values()), default=1)
+    left_g, right_g, top_g, bot_g = 60, 20, 20, 30
+    W = left_g + max_cols*tile_w + right_g
+    H = top_g + len(floors)*tile_h + bot_g
+
+    img = Image.new("RGB", (W, H), (255, 255, 255))
+    draw = ImageDraw.Draw(img)
+
+    # elevator shaft
+    shaft_x0, shaft_x1 = 20, left_g - 10
+    draw.rectangle([shaft_x0, top_g, shaft_x1, H - bot_g], outline=(200,200,200), width=2, fill=(245,245,245))
+
+    # draw floors bottom-up
+    n = len(floors)
+    for idx, f in enumerate(sorted(floors, reverse=True)):
+        y = top_g + (n - 1 - idx) * tile_h
+        # floor tick
+        draw.line([(shaft_x0, y+tile_h-1), (shaft_x1, y+tile_h-1)], fill=(210,210,210), width=1)
+        draw.text((5, y + tile_h/2 - 6), f"{f}", fill=(0,0,0))
+
+        row = by_floor.get(f, [])
+        for j, r in enumerate(row):
+            x0 = left_g + j*tile_w + 5
+            y0 = y + 5
+            x1 = x0 + tile_w - 10
+            y1 = y0 + tile_h - 10
+
+            base = _PALETTE.get(r["room_class"], (180,180,180))
+            fill = base if r.get("active", True) else _lighten(base, 0.6)
+            draw.rectangle([x0, y0, x1, y1], fill=fill, outline=(90,90,90), width=2)
+
+            # label
+            name = f"{r['room_name']} (L{r['level']})"
+            draw.text((x0+6, y0+6), name[:24], fill=(0,0,0))
+
+            # capacity bar & text
+            if r.get("repeat", False):
+                cap = max(1, int(r.get("slots_total", 1)))
+                used = int(r.get("weekly_served", 0))
+                txt = f"{used}/{cap} served"
+                frac = min(1.0, used / cap)
+            else:
+                total = max(1, int(r.get("slots_total", 1)))
+                rem = max(0, int(r.get("slots_remaining", total)))
+                txt = f"{rem}/{total} left"
+                frac = 1 - min(1.0, (total - rem) / total)
+            # bar
+            bx0, by0 = x0+6, y1-14
+            bx1 = x0+6 + int((x1 - (x0+6)) * frac)
+            draw.rectangle([x0+6, y1-14, x1-6, y1-8], fill=(230,230,230), outline=(150,150,150))
+            draw.rectangle([x0+6, y1-14, bx1,   y1-8], fill=(100,100,100))
+            draw.text((x0+6, y1-26), txt, fill=(0,0,0))
+
+    return img
